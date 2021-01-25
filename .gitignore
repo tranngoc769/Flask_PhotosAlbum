@@ -12,3 +12,7 @@ migrations/script.py.mako
 migrations/__pycache__/env.cpython-36.pyc
 migrations/versions/e93f2891d91d_.py
 migrations/*
+__pycache__/http_response.cpython-36.pyc
+__pycache__/util.cpython-36.pyc
+.vscode/launch.json
+.vscode/*
