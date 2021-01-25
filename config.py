@@ -4,5 +4,5 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 SQLALCHEMY_ECHO = False
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:@localhost/albumphotos"
-allow_extension = ["jpg"]
-storage_path = ""
+allow_extension = ["jpg","png"]
+storage_path = "storage"
