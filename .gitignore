@@ -1,0 +1,14 @@
+__pycache__/app.cpython-36.pyc
+__pycache__/config.cpython-36.pyc
+__pycache__/Model.cpython-36.pyc
+__pycache__/run.cpython-36.pyc
+resources/__pycache__/Album.cpython-36.pyc
+resources/__pycache__/Photo.cpython-36.pyc
+resources/__pycache__/User.cpython-36.pyc
+migrations/alembic.ini
+migrations/env.py
+migrations/README
+migrations/script.py.mako
+migrations/__pycache__/env.cpython-36.pyc
+migrations/versions/e93f2891d91d_.py
+migrations/*
