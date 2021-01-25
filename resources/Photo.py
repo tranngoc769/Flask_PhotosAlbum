@@ -9,16 +9,44 @@ from http_response import *
 from util import  *
 photos_schema = PhotoSchema(many=True)
 photo_schema = PhotoSchema()
+
+class DeletePhotoResource(Resource):
+    @staticmethod
+    def post(photoid):
+        # Delete
+        check_photos = Photo.query.filter_by(id=photoid).first()
+        if (check_photos== None):
+            return {'message': 'Not found photo id : ' + str(photoid)}, HTTP_NotFound['code']
+        try:
+            path = check_photos.path
+            delete_resp = Photo.query.filter_by(id=photoid).delete()
+            db.session.commit()
+            msg = 'Delete photo success'
+            try:
+                os.remove(path)
+            except Exception as rm_err:
+                msg = msg + ", "+str(rm_err)
+            return {'message': msg}, HTTP_OK['code']
+        except  Exception as err:
+            return {'message': str(err)}, HTTP_BadRequest['code']
+        return {'message': 'Delete photo success'}, HTTP_OK['code']
 class PhotoResource(Resource):
     @staticmethod
     def get():
         photos = Photo.query.all()
         photos = photos_schema.dumps(photos)
         return {'status': 'success', 'data': photos}, 200
+        
+    @staticmethod
+    def get(id):
+        photos = Photo.query.all()
+        photos = photos_schema.dumps(photos)
+        return {'status': 'success', 'data': photos}, 200
+
     @staticmethod
     def post():
         if (len(request.files)==0):
-            return {"status": 'success', 'data': 'Required iamge file'}, 201
+            return {'message': 'Required file'}, 201
         id_album = request.form.get('id_album')
         description = request.form.get('description')
         # VALIDATE

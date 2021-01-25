@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask_restful import Api
 
-from resources.Photo import PhotoResource
+from resources.Photo import *
 from resources.Album import AlbumsResource
 
 api_bp = Blueprint('api', __name__)
@@ -13,5 +13,9 @@ template = Api(template_bp)
 # template.add_resource(IndexResource, '/')
 # template.add_resource(AddUser, 'addUser')
 # template.add_resource(AddDetails, 'addDetails')
-api.add_resource(PhotoResource, '/Photo')
+api.add_resource(DeletePhotoResource,'/Photo/<string:photoid>/delete', endpoint='detelte photo')
+api.add_resource(PhotoResource, '/Photo', endpoint='create photo')
+
+
+# ALBUM
 api.add_resource(AlbumsResource, '/Album')
