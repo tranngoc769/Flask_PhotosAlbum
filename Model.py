@@ -14,10 +14,12 @@ class Album(db.Model):
     name = db.Column(db.String(150), nullable=False)
     description = db.Column(db.String(1000), nullable=True)
     date_created = db.Column(db.DateTime, nullable= False)
-    def __init__(self, name, date_created, description =""):
+    user_id = db.Column(db.Integer, nullable=True)
+    def __init__(self, name, date_created, user_id,description =""):
         self.name = name
         self.date_created = date_created
         self.description = description
+        self.user_id = user_id
 
 class User(db.Model):
     __tablename__ = 'user'
@@ -44,18 +46,21 @@ class Photo(db.Model):
     description = db.Column(db.String(1000), nullable=True)
     path = db.Column(db.String(1000), nullable=False)
     date_created = db.Column(db.DateTime, nullable= False)
-    def __init__(self, name, id_album, description, path, date_created,save_name):
+    user_id = db.Column(db.Integer, nullable=True)
+    def __init__(self, name, id_album, description, path, date_created,save_name, user_id):
         self.name = name
         self.id_album = id_album
         self.description = description
         self.save_name = save_name
         self.path = path
         self.date_created = date_created
+        self.user_id = user_id
 class AlbumSchema(ma.Schema):
     id = fields.Integer(dump_only=True)
     name = fields.String(required=True)
     description = fields.String(required=False)
     date_created  = fields.DateTime(required=True)
+    user_id = fields.Integer(required=True)
 class PhotoSchema(ma.Schema):
     id = fields.Integer(dump_only=True)
     id_album = fields.Integer(required=True)
@@ -64,6 +69,7 @@ class PhotoSchema(ma.Schema):
     path = fields.String(required=True)
     description = fields.String(required=True)
     date_created = fields.DateTime(required=True)
+    user_id = fields.Integer(required=True)
 class UserSchema(ma.Schema):
     id = fields.Integer(dump_only=True)
     username = fields.Integer(required=True)
