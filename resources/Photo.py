@@ -47,11 +47,17 @@ class PhotoResource(Resource):
     def post():
         if (len(request.files)==0):
             return {'message': 'Required file'}, 201
+        user_id = request.form.get('user_id')
         id_album = request.form.get('id_album')
         description = request.form.get('description')
         # VALIDATE
         if (id_album == None):
             return {'message': 'id_album is required'}, HTTP_NotAccept['code']
+        if user_id == None or user_id.isdigit() == False:
+            return {'message': 'user_id (int) is required'}, HTTP_NotAccept['code']
+        chech_user = User.query.filter_by(user_id=user_id).first()
+        if chech_user == None:
+            return {'message': 'user_id not found : '+str(user_id) }, HTTP_NotFound['code']
         file_data = None
         try:
             file_data = request.files['file']

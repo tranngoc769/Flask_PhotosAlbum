@@ -18,9 +18,15 @@ class AlbumsResource(Resource):
     def post():
         try:
             album_name = request.form.get('name')
+            user_id = request.form.get('user_id')
             description = request.form.get('description')
             if album_name == None:
                 return {'message': 'Album name is required'}, HTTP_NotAccept['code']
+            if user_id == None or user_id.isdigit() == False:
+                return {'message': 'user_id (int) is required'}, HTTP_NotAccept['code']
+            chech_user = User.query.filter_by(user_id=user_id).first()
+            if chech_user == None:
+                return {'message': 'user_id not found : '+str(user_id) }, HTTP_NotFound['code']
             album = Album.query.filter_by(name=album_name).first()
             if album:
                 return {'message': 'Album name already exists'}, HTTP_NotAccept['code']
