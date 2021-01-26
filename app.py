@@ -16,6 +16,7 @@ template = Api(template_bp)
 # template.add_resource(AddDetails, 'addDetails')
 api.add_resource(DeletePhotoResource,'/Photo/<string:photoid>/delete', endpoint='detelte photo')
 api.add_resource(PhotoResource, '/Photo', endpoint='create photo')
+api.add_resource(PhotoResource, '/Photo/<int:id>', endpoint='Get photo by id')
 # ALBUM
 api.add_resource(AlbumsResource, '/Album')
 # USER 
