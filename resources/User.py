@@ -39,6 +39,43 @@ class ChangeUserResource(Resource):
             return {'status': 'success', 'data': json.loads(users[0])}, 200
         except  Exception as err:
             return {'message': str(err)}, HTTP_BadRequest['code']
+    @staticmethod
+    def post(id):
+        uid = request.form.get('user_id')
+        fullname = request.form.get('fullname')
+        password = request.form.get('password')
+        email = request.form.get('email')
+        role = request.form.get('role')
+        users = User.query.filter_by(id=id).first()
+        if uid == None:
+            return {'message': 'User_id (int) is required'}, HTTP_NotAccept['code']
+        if users == None:
+            return {'message': 'Userid found'}, HTTP_NotAccept['code']
+        if (fullname == None or fullname == ''):
+            return {'message': 'fullname is required'}, HTTP_NotAccept['code']
+        if (email == None or email == ''):
+            return {'message': 'email is required'}, HTTP_NotAccept['code']
+        if (role == None or role.isdigit() == False):
+            return {'message': 'role (int) is required'}, HTTP_NotAccept['code']
+        # Permisision
+        if uid != str(id):
+            # Check admin
+            check_admin_user = User.query.filter_by(id=uid).first()
+            if check_admin_user == None:
+                return {'message': 'Permision denied'}, HTTP_NotAccept['code']
+            if check_admin_user.role != 1:
+                return {'message': 'Permision denied'}, HTTP_NotAccept['code']
+        try:
+            users.fullname = fullname
+            if (password!= None or password != ''):
+                password = result = hashlib.md5(password.encode("utf-8")).hexdigest()
+                users.password = password
+            users.email = email
+            users.role = role
+            db.session.commit()
+            return {'message':' Update user success'}, HTTP_OK['code']
+        except  Exception as err:
+            return {'message': str(err)}, HTTP_BadRequest['code']
 class UserResource(Resource):
     @staticmethod
     def get():
@@ -71,8 +108,7 @@ class UserResource(Resource):
         try:
             # PREPARE INFORMATION
             date_created = get_current_time()
-            result = hashlib.md5(password) 
-            password = (result.digest()) 
+            password = result = hashlib.md5(password.encode("utf-8")).hexdigest()
             # CREATE USER
             user = User(
                 username=username,
