@@ -33,7 +33,19 @@ class DeletePhotoResource(Resource):
 class PhotoResource(Resource):
     @staticmethod
     def get(id):
-        photos = Photo.query.all()
+        user_id = request.form.get('user_id')
+        if (user_id == None or user_id.isdigit() == False):
+            return {'message': 'user_id (int) is required'}, HTTP_NotAccept['code']
+        photos = Photo.query.filter_by(id=id).first()
+        if (photos == None):
+            return {'message': 'Not found photo'}, HTTP_NotFound['code']
+        # Check permission
+        owner_id = photos.user_id
+        if (str(owner_id) != user_id):
+            #  not owner - but can be share permission
+            permissions = PermissionForPhoto.query.filter_by(id_Photo=id, id_user=user_id)
+            if (permissions == None):
+                return {'message': 'Photo is not share permission'}, HTTP_NotFound['code']
         photos = photos_schema.dumps(photos)
         return {'status': 'success', 'data': json.loads(photos[0])}, 200
     @staticmethod
