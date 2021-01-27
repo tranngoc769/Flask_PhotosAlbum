@@ -78,6 +78,7 @@ class ChangeUserResource(Resource):
 class UserResource(Resource):
     @staticmethod
     def get():
+        # Need permision
         users = User.query.all()
         users = users_schema.dumps(users)
         return {'status': 'success', 'data': json.loads(users[0])}, 200

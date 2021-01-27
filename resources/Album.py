@@ -12,8 +12,7 @@ class AlbumsResource(Resource):
     def get():
         albums = Album.query.all()
         albums = albums_schema.dump(albums)
-        return {'status': 'success', 'data': albums}, 200
-
+        return {'status': 'success', 'data': json.loads(albums[0])}, 200
     @staticmethod
     def post():
         try:

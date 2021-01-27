@@ -35,7 +35,7 @@ class PhotoResource(Resource):
     def get(id):
         photos = Photo.query.all()
         photos = photos_schema.dumps(photos)
-        return {'status': 'success', 'data': photos}, 200
+        return {'status': 'success', 'data': json.loads(photos[0])}, 200
     @staticmethod
     def post():
         if (len(request.files)==0):
