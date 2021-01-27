@@ -28,6 +28,8 @@ class AlbumsResource(Resource):
             chech_user = User.query.filter_by(id=user_id).first()
             if chech_user == None:
                 return {'message': 'user_id not found : '+str(user_id) }, HTTP_NotFound['code']
+            if  chech_user.is_delete == 1:
+                return {'message': 'user_id is deleted : '+str(user_id) }, HTTP_NotFound['code']
             album = Album.query.filter_by(name=album_name).first()
             if album:
                 return {'message': 'Album name already exists'}, HTTP_NotAccept['code']
