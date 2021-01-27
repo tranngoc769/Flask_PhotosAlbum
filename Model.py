@@ -78,3 +78,14 @@ class UserSchema(ma.Schema):
     email = fields.Email(required=True)
     date_created = fields.DateTime(required=True)
     role = fields.Integer(required=True)
+# 
+class PermissionForPhoto(db.Model):
+    __tablename__ = 'photo_permission'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id_user = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    id_Photo = db.Column(db.Integer, db.ForeignKey('photo.id'), nullable=False)
+    permision = fields.Integer(required=True)
+    def __init__(self, id_user, id_Photo, permision):
+        self.id_user = id_user
+        self.id_Photo = id_Photo
+        self.permision = permision

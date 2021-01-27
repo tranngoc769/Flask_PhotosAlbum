@@ -52,6 +52,11 @@ class PhotoResource(Resource):
         chech_user =  User.query.filter_by(id=user_id).first()
         if chech_user == None:
             return {'message': 'user_id not found : '+str(user_id) }, HTTP_NotFound['code']
+        chech_album = Album.query.filter_by(id=id_album).first()
+        if (chech_album == None):
+            return {'message': 'Not found album id :'+str(id_album)},  HTTP_NotFound['code']
+        if (str(chech_user.id)!= str(chech_album.user_id)):
+            return {'message': 'User create photo must be user create album'},  HTTP_NotAccept['code']
         file_data = None
         try:
             file_data = request.files['file']
@@ -63,9 +68,6 @@ class PhotoResource(Resource):
         file_extension = get_extension(file_name)
         if file_extension not in allow_extension:
             return {'message': 'File extension is not allow'}, HTTP_NotAccept['code']
-        chech_album = Album.query.filter_by(id=id_album).first()
-        if (chech_album==None):
-            return {'message': 'Not found album id :'+str(id_album)}, 404
         # END VALIDATE
         # CREATE DIR FOR ALBUM
         try:
@@ -83,12 +85,14 @@ class PhotoResource(Resource):
                 save_name= save_name,
                 path= storage_file_path,
                 date_created=date_upload,
-                description= description
+                description= description,
+                user_id=user_id
                 )
             # SAVE TO DB
             db.session.add(photo)
             db.session.commit()
             result = photo_schema.dump(photo)
+            # 
             return {"status": 'success', 'data': result[0]}, 200
         except Exception as err:
             return {'message': str(err)}, HTTP_Forbidden['code']
