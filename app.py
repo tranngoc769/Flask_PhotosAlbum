@@ -4,6 +4,7 @@ from flask_restful import Api
 from resources.Photo import *
 from resources.Album import *
 from resources.User import *
+from resources.Permission import *
 
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
@@ -23,4 +24,5 @@ api.add_resource(AlbumsResource, '/Album')
 api.add_resource(UserResource, '/User')
 api.add_resource(ChangeUserResource, '/User/<int:id>')
 # PERMISSION 
-api.add_resource(PermisionForPhotoResource, '/Permission')
+api.add_resource(PermisionForPhotoResource, '/permission/photo')
+api.add_resource(PermisionForAlbumResource, '/permission/album')

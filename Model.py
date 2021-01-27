@@ -89,3 +89,16 @@ class PermissionForPhoto(db.Model):
         self.id_user = id_user
         self.id_Photo = id_Photo
         self.permision = permision
+
+
+class PermissionForAlbum(db.Model):
+    __tablename__ = 'album_permission'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id_user = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    id_album = db.Column(db.Integer, db.ForeignKey('photo.id'), nullable=False)
+    permision = fields.Integer(required=True)
+    def __init__(self, id_user, id_Photo, permision):
+        self.id_user = id_user
+        self.id_album = id_Photo
+        self.permision = permision
+
