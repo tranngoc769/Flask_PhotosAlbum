@@ -125,7 +125,7 @@ class UserResource(Resource):
             return {"status": 'success', 'data': result[0]}, 200
         except Exception as err:
             return {'message': str(err)}, HTTP_Forbidden['code']
-class PermisionForPhoto(Resource):
+class PermisionForPhotoResource(Resource):
     @staticmethod
     def post():
         own_user_id = request.form.get('own_user_id')
@@ -151,16 +151,21 @@ class PermisionForPhoto(Resource):
         chech_photo = Photo.query.filter_by(id=photo_id).first()
         if (chech_photo):
             return {'message': 'Not found photo'}, HTTP_NotFound['code']
+        # check existed permission 
         try:
             if (str(chech_own.id) != str(chech_photo.user_id)):
                 return {'message': 'User is not own photo'}, HTTP_NotFound['code']
-            permission = PermissionForPhoto(
-                id_user= user_id,
-                id_Photo= photo_id,
-                permision=permission
-            )
-            db.session.add(permission)
+            check_exist_permission = PermissionForPhoto.query.filter_by(id_user=user_id, id_Photo=photo_id).first()
+            if (check_exist_permission != None):
+                check_exist_permission.permision = permission
+            else:
+                permission = PermissionForPhoto(
+                    id_user= user_id,
+                    id_Photo= photo_id,
+                    permision=permission
+                )
+                db.session.add(permission)
             db.session.commit()
-            return {'message': 'Set permission success'}, HTTP_Forbidden['code']
+            return {'message': 'Set permission success'}, HTTP_OK['code']
         except Exception as err:
             return {'message': str(err)}, HTTP_Forbidden['code']
