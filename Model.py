@@ -75,7 +75,6 @@ class UserSchema(ma.Schema):
     id = fields.Integer(dump_only=True)
     username = fields.String(required=True)
     fullname = fields.String(required=True)
-    password = fields.String(required=False)
     email = fields.Email(required=True)
     date_created = fields.DateTime(required=True)
     role = fields.Integer(required=True)

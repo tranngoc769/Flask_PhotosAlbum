@@ -34,7 +34,6 @@ class ChangeUserResource(Resource):
         if users == None:
             return {'message': 'Userid found'}, HTTP_NotAccept['code']
         try:
-            users.password = None
             users = user_schema.dumps(users)
             return {'status': 'success', 'data': json.loads(users[0])}, 200
         except  Exception as err:
@@ -81,7 +80,7 @@ class UserResource(Resource):
     def get():
         users = User.query.all()
         users = users_schema.dumps(users)
-        return {'status': 'success', 'data': users}, 200
+        return {'status': 'success', 'data': json.loads(users[0])}, 200
     @staticmethod
     def post():
         username = request.form.get('username')
