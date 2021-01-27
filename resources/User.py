@@ -7,8 +7,38 @@ import json
 from config import  *
 from http_response import *
 from util import  *
+import hashlib 
 users_schema = UserSchema(many=True)
 user_schema = UserSchema()
+class ChangeUserResource(Resource):
+    @staticmethod
+    def delete(id):
+        uid = request.form.get('user_id')
+        if (uid == None or uid.isdigit() == False):
+            return {'message': 'user_id (int) is required'}, HTTP_NotAccept['code']
+        chech_user = User.query.filter_by(id=uid).first()
+        if chech_user == None:
+            return {'message': 'Permission denied'}, HTTP_NotAccept['code']
+        if chech_user.role != 1:
+            return {'message': 'Permission denied'}, HTTP_NotAccept['code']
+        try:
+            delete_resp = User.query.filter_by(id=id).delete()
+            db.session.commit()
+            msg = 'Delete photo success'
+            return {'message': msg}, HTTP_OK['code']
+        except  Exception as err:
+            return {'message': str(err)}, HTTP_BadRequest['code']
+    @staticmethod
+    def get(id):
+        users = User.query.filter_by(id=id).first()
+        if users == None:
+            return {'message': 'Userid found'}, HTTP_NotAccept['code']
+        try:
+            users.password = None
+            users = user_schema.dumps(users)
+            return {'status': 'success', 'data': json.loads(users[0])}, 200
+        except  Exception as err:
+            return {'message': str(err)}, HTTP_BadRequest['code']
 class UserResource(Resource):
     @staticmethod
     def get():
@@ -41,6 +71,8 @@ class UserResource(Resource):
         try:
             # PREPARE INFORMATION
             date_created = get_current_time()
+            result = hashlib.md5(password) 
+            password = (result.digest()) 
             # CREATE USER
             user = User(
                 username=username,

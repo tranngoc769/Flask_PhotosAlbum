@@ -14,7 +14,7 @@ class Album(db.Model):
     name = db.Column(db.String(150), nullable=False)
     description = db.Column(db.String(1000), nullable=True)
     date_created = db.Column(db.DateTime, nullable= False)
-    user_id = db.Column(db.Integer, nullable=True)
+    user_id = db.Column(db.Integer,db.ForeignKey('user.id'),nullable=False)
     def __init__(self, name, date_created, user_id,description =""):
         self.name = name
         self.date_created = date_created
@@ -30,6 +30,7 @@ class User(db.Model):
     email = db.Column(db.String(100), nullable=True)
     date_created = db.Column(db.DateTime, nullable= False)
     role = db.Column(db.Integer,nullable=False, default=2)
+    is_delete = db.Column(db.Integer,nullable=False, default=0)
     def __init__(self, username, fullname, password,email,date_created, role):
         self.username = username
         self.fullname = fullname
@@ -72,9 +73,9 @@ class PhotoSchema(ma.Schema):
     user_id = fields.Integer(required=True)
 class UserSchema(ma.Schema):
     id = fields.Integer(dump_only=True)
-    username = fields.Integer(required=True)
+    username = fields.String(required=True)
     fullname = fields.String(required=True)
-    password = fields.String(required=True)
+    password = fields.String(required=False)
     email = fields.Email(required=True)
     date_created = fields.DateTime(required=True)
     role = fields.Integer(required=True)

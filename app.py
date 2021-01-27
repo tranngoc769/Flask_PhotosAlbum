@@ -21,3 +21,4 @@ api.add_resource(PhotoResource, '/Photo/<int:id>', endpoint='Get photo by id')
 api.add_resource(AlbumsResource, '/Album')
 # USER 
 api.add_resource(UserResource, '/User')
+api.add_resource(ChangeUserResource, '/User/<int:id>')
