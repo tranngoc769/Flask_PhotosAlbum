@@ -22,3 +22,5 @@ api.add_resource(AlbumsResource, '/Album')
 # USER 
 api.add_resource(UserResource, '/User')
 api.add_resource(ChangeUserResource, '/User/<int:id>')
+# PERMISSION 
+api.add_resource(PermisionForPhotoResource, '/Permission')
