@@ -39,14 +39,19 @@ class PhotoResource(Resource):
         photos = Photo.query.filter_by(id=id).first()
         if (photos == None):
             return {'message': 'Not found photo'}, HTTP_NotFound['code']
+        # Check user
+        chech_user =  User.query.filter_by(id=user_id).first()
+        if (chech_user == None):
+            return {'message': 'Not found user'}, HTTP_NotFound['code']
         # Check permission
         owner_id = photos.user_id
-        if (str(owner_id) != user_id):
+        if (str(owner_id) != user_id and chech_user.role != 1):
             #  not owner - but can be share permission
             permissions = PermissionForPhoto.query.filter_by(id_Photo=id, id_user=user_id)
             if (permissions == None):
                 return {'message': 'Photo is not share permission'}, HTTP_NotFound['code']
-        photos = photos_schema.dumps(photos)
+        # Is admin / is shared permission
+        photos = photo_schema.dumps(photos)
         return {'status': 'success', 'data': json.loads(photos[0])}, 200
     @staticmethod
     def post():
